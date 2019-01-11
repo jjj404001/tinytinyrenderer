@@ -5,6 +5,9 @@
 
 // TGA format details:
 // http://tfc.duke.free.fr/coding/tga_specs.pdf
+
+#pragma pack(push,1) // for tight pack for struct.
+
 #include <vector>
 #include "Color.h"
 
@@ -52,8 +55,16 @@ class TGA_Image
         ImageSpec image_spec_;
     };
 
+	void FlipVertically();
+	void FlipHorizontally();
+
+	//https://en.wikipedia.org/wiki/Run-length_encoding
+	bool UncompRLE(std::ifstream& _input_file);
+	bool CompRLE();
+
 
 	std::string filename_;
+	TGA_Header header_;
 	short width_;
 	short height_;
 	char byte_per_pixel;
@@ -61,9 +72,11 @@ class TGA_Image
 
 public:
 	TGA_Image(std::string _filename);
+	~TGA_Image();
 	bool LoadFromTGAFile(std::string _filename);
+	bool SaveToTGAFile(std::string _filename, bool is_compress);
 
-	enum class TGA_Format
+	enum TGA_Format
 	{
 		GRAYSCALE = 1, RGB = 3, RGBA = 4
 	};
@@ -76,7 +89,7 @@ public:
 	// 9   Run - length encoded, Color - mapped Image
 	// 10  Run - length encoded, True - color Image
 	// 11  Run - length encoded, Black - and-white Image
-	enum class TGA_Type
+	enum TGA_Type
 	{
 		NO_IMAGE = 0,  UNCOMP_COLOR_MAPPED = 1, UNCOMP_TRUE_COLOR = 2, UNCOMP_BLACK_WHITE = 3,
 		RLE_COLOR_MAPPED = 9, RLE_TRUE_COLOR = 10, RLE_BLACK_WHITE = 11,
@@ -89,8 +102,8 @@ public:
 	//	bottom right		:      0:     1
 	//	top left			:      1:     0
 	//	top right			:      1:     1
-	enum class TGA_Origin
+	enum TGA_Origin // TODO: change to byte code.
 	{
-		FLIP_HORIZONTALLY = 0x10, FLIP_VERTICALLY = 0x20
+		FLIP_HORIZONTALLY = 0b10000, FLIP_VERTICALLY = 0b100000
 	};
 };
