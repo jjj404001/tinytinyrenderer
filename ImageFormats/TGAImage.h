@@ -6,7 +6,6 @@
 // TGA format details:
 // http://tfc.duke.free.fr/coding/tga_specs.pdf
 
-#pragma pack(push,1) // for tight pack for struct.
 
 #include <vector>
 #include "Color.h"
@@ -59,8 +58,9 @@ class TGA_Image
 	void FlipHorizontally();
 
 	//https://en.wikipedia.org/wiki/Run-length_encoding
-	bool UncompRLE(std::ifstream& _input_file);
-	bool CompRLE();
+	bool UncompressRLE(std::ifstream& _input_file);
+	bool CompressRLE(std::ofstream& _input_file);
+
 
 
 	std::string filename_;

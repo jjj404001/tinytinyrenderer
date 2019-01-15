@@ -1,8 +1,11 @@
 #pragma pack(push,1) // for tight pack for struct.
 
 #include <algorithm>
+#include <utility>
 #include <iostream>
 #include <fstream>
+#include <cassert>
+
 #include "TGAImage.h"
 
 void TGA_Image::FlipVertically()
@@ -23,7 +26,7 @@ void TGA_Image::FlipHorizontally()
 	
 }
 
-bool TGA_Image::UncompRLE(std::ifstream& _input_file)
+bool TGA_Image::UncompressRLE(std::ifstream& _input_file)
 {
 	auto nPixels = width_ * height_;
 
@@ -32,24 +35,45 @@ bool TGA_Image::UncompRLE(std::ifstream& _input_file)
 	{
 		while (nPixels)
 		{
+			assert(nPixels > 0); // if number of remaining pixel is less than 0, something is wrong.
 			unsigned char chunk_header = _input_file.get();
-			chunk_header++;
+			
 
-			if (chunk_header >= 128)
-				chunk_header -= 128; // ?
-
-			Color pixel;
-
-			_input_file.read((char*)&pixel.blue, sizeof(unsigned char));
-			_input_file.read((char*)&pixel.green, sizeof(unsigned char));
-			_input_file.read((char*)&pixel.red, sizeof(unsigned char));
-			_input_file.read((char*)&pixel.alpha, sizeof(unsigned char));
-
-			for (int i = 0; i < chunk_header; i++)
+			if (chunk_header >= 128) // if 8th bit is exist.
 			{
-				data_.push_back(pixel);
+				chunk_header -= 127;
+
+				Color pixel;
+
+				_input_file.read((char*)&pixel.blue, sizeof(unsigned char));
+				_input_file.read((char*)&pixel.green, sizeof(unsigned char));
+				_input_file.read((char*)&pixel.red, sizeof(unsigned char));
+				_input_file.read((char*)&pixel.alpha, sizeof(unsigned char));
+
+				for (int i = 0; i < chunk_header; i++)
+					data_.push_back(pixel);
 			}
-			nPixels--;
+			else
+			{
+				chunk_header++;
+
+
+				for (int i = 0; i < chunk_header; i++)
+				{
+					Color pixel;
+
+					_input_file.read((char*)&pixel.blue, sizeof(unsigned char));
+					_input_file.read((char*)&pixel.green, sizeof(unsigned char));
+					_input_file.read((char*)&pixel.red, sizeof(unsigned char));
+					_input_file.read((char*)&pixel.alpha, sizeof(unsigned char));
+
+					data_.push_back(pixel);
+				}
+			}
+
+
+
+			nPixels -= chunk_header;
 		}
 
 	}
@@ -57,27 +81,117 @@ bool TGA_Image::UncompRLE(std::ifstream& _input_file)
 	{
 		while (nPixels)
 		{
+			assert(nPixels > 0); // if number of remaining pixel is less than 0, something is wrong.
 			unsigned char chunk_header = _input_file.get();
-			chunk_header++;
+			
 
-			if (chunk_header >= 128)
-				chunk_header -= 128; // ?
-
-			Color pixel;
-
-			_input_file.read((char*)&pixel.blue, sizeof(unsigned char));
-			_input_file.read((char*)&pixel.green, sizeof(unsigned char));
-			_input_file.read((char*)&pixel.red, sizeof(unsigned char));
-			pixel.alpha = 255;
-
-			for (int i = 0; i < chunk_header; i++)
+			if (chunk_header >= 128) // if 8th bit is exist.
 			{
-				data_.push_back(pixel);
+				chunk_header -= 127;
+
+				Color pixel;
+
+				_input_file.read((char*)&pixel.blue, sizeof(unsigned char));
+				_input_file.read((char*)&pixel.green, sizeof(unsigned char));
+				_input_file.read((char*)&pixel.red, sizeof(unsigned char));
+				pixel.alpha = 255;
+
+				for (int i = 0; i < chunk_header; i++)
+					data_.push_back(pixel);
 			}
-			nPixels--;
+			else
+			{
+				chunk_header++;
+
+
+				for (int i = 0; i < chunk_header; i++)
+				{
+					Color pixel;
+
+					_input_file.read((char*)&pixel.blue, sizeof(unsigned char));
+					_input_file.read((char*)&pixel.green, sizeof(unsigned char));
+					_input_file.read((char*)&pixel.red, sizeof(unsigned char));
+					pixel.alpha = 255;
+
+					data_.push_back(pixel);
+				}
+			}
+				
+
+
+				
+			nPixels -= chunk_header;
 		}
 	}
 
+
+	return true;
+}
+
+bool TGA_Image::CompressRLE(std::ofstream & _output_file)
+{
+	auto nPixels = width_ * height_;
+
+
+	auto chunck_begin = std::begin(data_);
+	auto color_size = sizeof(Color); // default = 32bits
+
+	if (header_.image_spec_.bits_per_pixel_ == 24)
+		color_size -= 1;
+
+	while(nPixels)
+	{
+		unsigned char chunk_header = 0;
+		auto chunck_end = std::end(data_);
+		chunck_end = std::adjacent_find(chunck_begin, chunck_end, [](Color _i, Color _j) { return _i == _j; });
+
+		auto chunk_size = (chunck_end - chunck_begin);
+		if (!chunk_size)
+		{
+			chunck_end = std::end(data_);
+			chunck_end = std::adjacent_find(chunck_begin, chunck_end, [](Color _i, Color _j) { return _i != _j; });
+			chunk_size = (chunck_end - chunck_begin);
+			if (chunk_size > 128)
+			{
+				chunck_end = chunck_begin + 128; // Max length of chunk is 128.;
+				chunk_size = (chunck_end - chunck_begin);
+			}
+
+			nPixels -= chunk_size;
+			chunk_header += chunk_size-1; //-1 To map 1~256 to 0~255 
+
+			_output_file.put(chunk_header);
+			std::for_each(chunck_begin, chunck_end, [&] (Color _input_color)
+			{
+				auto temp = _input_color.red;
+				_input_color.red = _input_color.blue;
+				_input_color.blue = temp;
+				_output_file.write(reinterpret_cast<char*>(&_input_color), color_size);
+			}
+			);
+		}
+		else
+		{
+			if (chunk_size > 128)
+				chunk_size = 128;
+
+			nPixels -= chunk_size;
+
+			chunk_header += 128 + chunk_size-1; //-1 To map 1~256 to 0~255 
+
+			_output_file.put(chunk_header);
+			Color color = *chunck_begin;
+			auto temp = color.red;
+			color.red = color.blue;
+			color.blue = temp;
+
+			_output_file.write(reinterpret_cast<char*>(&color), color_size);
+		}
+
+		if(chunck_end != std::end(data_))
+			chunck_begin = chunck_begin + chunk_size;
+	}
+	
 
 	return true;
 }
@@ -200,14 +314,17 @@ bool TGA_Image::LoadFromTGAFile(std::string _filename)
 		break;
 		case static_cast<char>(TGA_Type::RLE_TRUE_COLOR) :
 		case static_cast<char>(TGA_Type::RLE_BLACK_WHITE) :
-			UncompRLE(input_file);
+			UncompressRLE(input_file);
 		break;
 	}
 
 	if (!(static_cast<int>(header_.image_spec_.image_origin_) & TGA_Origin::FLIP_VERTICALLY))
 		FlipVertically();
+
+		
 	if ((static_cast<int>(header_.image_spec_.image_origin_) & TGA_Origin::FLIP_HORIZONTALLY))
 		FlipHorizontally();
+
 
 
 	filename_ = _filename;
@@ -248,12 +365,13 @@ bool TGA_Image::SaveToTGAFile(std::string _filename, bool is_compress)
 		return false;
 	}
 
-	if (!is_compress) 
+	if (!is_compress)
 	{
 		auto color_size = sizeof(Color); // default = 32bits
 
-		if(header.image_spec_.bits_per_pixel_ == 24)
-			color_size = sizeof(unsigned char) * 3;
+		if (header.image_spec_.bits_per_pixel_ == 24)
+			color_size -= 1;
+
 
 		for (auto& itr : data_)
 		{
@@ -271,12 +389,9 @@ bool TGA_Image::SaveToTGAFile(std::string _filename, bool is_compress)
 				return false;
 			}
 		}
-		
 	}
-	else 
-	{
-		//TODO: unload rle data.
-	}
+	else
+		CompressRLE(output_file);
 
 
 	output_file.write((char *)developer_area, sizeof(developer_area));
