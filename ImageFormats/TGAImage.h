@@ -10,8 +10,6 @@
 #include <vector>
 #include "Color.h"
 
-
-
 class TGA_Image
 {
     // header : 
@@ -33,23 +31,23 @@ class TGA_Image
     {
         struct ColorMapSpec
         {
-            short first_entry_index_;
-            short colorMap_length_;
-			char colorMap_entry_size_;
+            short first_entry_index_ = 0;
+            short colorMap_length_ = 0;
+			char colorMap_entry_size_ = 0;
         };
 
         struct ImageSpec
         {
-            short x_origin_;
-            short y_origin_;
-            short width_;
-            short height_;
-            char bits_per_pixel_;
-            char image_origin_;
+            short x_origin_ = 0;
+            short y_origin_ = 0;
+            short width_ = 0;
+            short height_ = 0;
+            char bits_per_pixel_ = 0;
+            char image_origin_ = 0;
         };
-        char id_length_;
-        char colorMap_type_;
-        char image_type_;
+        char id_length_ = 0;
+        char colorMap_type_ = 0;
+        char image_type_ = 0;
         ColorMapSpec colorMap_spec_;
         ImageSpec image_spec_;
     };
@@ -72,6 +70,7 @@ class TGA_Image
 
 public:
 	TGA_Image(std::string _filename);
+	TGA_Image(int _width, int _height, int _byte_per_pixel);
 	~TGA_Image();
 	bool LoadFromTGAFile(std::string _filename);
 	bool SaveToTGAFile(std::string _filename, bool is_compress);
@@ -104,6 +103,6 @@ public:
 	//	top right			:      1:     1
 	enum TGA_Origin // TODO: change to byte code.
 	{
-		FLIP_HORIZONTALLY = 0b10000, FLIP_VERTICALLY = 0b100000
+		RIGHT = 0b10000, TOP = 0b100000
 	};
 };

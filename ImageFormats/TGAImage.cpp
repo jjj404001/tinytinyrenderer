@@ -188,8 +188,8 @@ bool TGA_Image::CompressRLE(std::ofstream & _output_file)
 			_output_file.write(reinterpret_cast<char*>(&color), color_size);
 		}
 
-		if(chunck_end != std::end(data_))
-			chunck_begin = chunck_begin + chunk_size;
+
+		chunck_begin = chunck_begin + chunk_size;
 	}
 	
 
@@ -199,6 +199,19 @@ bool TGA_Image::CompressRLE(std::ofstream & _output_file)
 TGA_Image::TGA_Image(std::string _filename) : filename_(_filename)
 {
 	LoadFromTGAFile(_filename);
+}
+
+TGA_Image::TGA_Image(int _width, int _height, int _byte_per_pixel) 
+	: width_(_width), height_(_height), byte_per_pixel(_byte_per_pixel)
+{
+	header_.image_type_ = _byte_per_pixel;
+	header_.image_spec_.bits_per_pixel_ = _byte_per_pixel << 3;
+	header_.image_spec_.height_ = height_;
+	header_.image_spec_.width_ = width_;
+
+	int nPixels = width_ * height_;
+	for (int i = 0; i < nPixels; i++)
+		data_.push_back(Color());
 }
 
 TGA_Image::~TGA_Image()
@@ -310,7 +323,7 @@ bool TGA_Image::LoadFromTGAFile(std::string _filename)
 
 			break;
 		case static_cast<char>(TGA_Type::RLE_COLOR_MAPPED) :
-		// TODO: RLE comp?
+		// TODO
 		break;
 		case static_cast<char>(TGA_Type::RLE_TRUE_COLOR) :
 		case static_cast<char>(TGA_Type::RLE_BLACK_WHITE) :
@@ -318,11 +331,12 @@ bool TGA_Image::LoadFromTGAFile(std::string _filename)
 		break;
 	}
 
-	if (!(static_cast<int>(header_.image_spec_.image_origin_) & TGA_Origin::FLIP_VERTICALLY))
+	// Default data is already filped vertically, so we have to flip this when setting is bottom.
+	if (!(static_cast<int>(header_.image_spec_.image_origin_) & TGA_Origin::TOP))
 		FlipVertically();
 
 		
-	if ((static_cast<int>(header_.image_spec_.image_origin_) & TGA_Origin::FLIP_HORIZONTALLY))
+	if ((static_cast<int>(header_.image_spec_.image_origin_) & TGA_Origin::RIGHT))
 		FlipHorizontally();
 
 
