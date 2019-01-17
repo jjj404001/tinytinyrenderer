@@ -432,3 +432,19 @@ bool TGA_Image::SaveToTGAFile(std::string _filename, bool is_compress)
 	output_file.close();
 	return true;
 }
+
+Color TGA_Image::GetPixel(unsigned int _x_coord, unsigned int _y_coord)
+{
+	if (_x_coord < 0 || _x_coord >= width_)
+		std::cerr << "X coord is out of boundary\n";
+	if (_y_coord < 0 || _y_coord >= height_)
+		std::cerr << "Y coord is out of boundary\n";
+
+
+	return data_[((width_ * _y_coord)-1) + _x_coord];
+}
+
+void TGA_Image::SetPixel(unsigned int _x_coord, unsigned int _y_coord, Color _color)
+{
+	data_[(width_ * _y_coord) + _x_coord] = _color;
+}

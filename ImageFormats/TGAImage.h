@@ -74,6 +74,8 @@ public:
 	~TGA_Image();
 	bool LoadFromTGAFile(std::string _filename);
 	bool SaveToTGAFile(std::string _filename, bool is_compress);
+	Color GetPixel(unsigned int _x_coord, unsigned int _y_coord);
+	void SetPixel(unsigned int _x_coord, unsigned int _y_coord, Color _color);
 
 	enum TGA_Format
 	{
