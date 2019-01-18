@@ -180,10 +180,10 @@ bool TGA_Image::CompressRLE(std::ofstream & _output_file)
 			chunk_header += 128 + chunk_size-1; //-1 To map 1~256 to 0~255 
 
 			_output_file.put(chunk_header);
+
+
 			Color color = *chunck_begin;
-			auto temp = color.red;
-			color.red = color.blue;
-			color.blue = temp;
+			std::swap(color.red, color.blue);
 
 			_output_file.write(reinterpret_cast<char*>(&color), color_size);
 		}
@@ -391,10 +391,7 @@ bool TGA_Image::SaveToTGAFile(std::string _filename, bool is_compress)
 		{
 			// TGA pixel color is in form of : BGRA.
 			// So swap RGBA to BGRA
-			auto temp = itr.red;
-			itr.red = itr.blue;
-			itr.blue = temp;
-
+			std::swap(itr.red, itr.blue);
 			output_file.write(reinterpret_cast<char*>(&itr), color_size);
 			if (!output_file.good())
 			{
