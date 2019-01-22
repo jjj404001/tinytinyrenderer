@@ -27,14 +27,14 @@ int main(int argc, const char* argv)
 	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(64, 79), Color(255, 0, 0, 255));
 	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(79, 64), Color(255, 0, 0, 255));
 	// 2
-	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(34, 79), Color(255, 0, 0, 255));
-	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(19, 64), Color(255, 0, 0, 255));
+	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(34, 79), Color(0, 255, 0, 255));
+	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(19, 64), Color(0, 255, 0, 255));
 	// 3
-	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(19, 34), Color(255, 0, 0, 255));
-	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(34, 19), Color(255, 0, 0, 255));
+	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(19, 34), Color(0, 0, 255, 255));
+	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(34, 19), Color(0, 0, 255, 255));
 	// 4
-	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(64, 19), Color(255, 0, 0, 255));
-	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(79, 34), Color(255, 0, 0, 255));
+	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(64, 19), Color(255, 255, 0, 255));
+	Bresenhams::Line(image, Vec2f(49, 49), Vec2f(79, 34), Color(255, 255, 0, 255));
 	image.SaveToTGAFile("b.tga", true);
 	
 	//getchar();

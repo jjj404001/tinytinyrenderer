@@ -50,7 +50,7 @@ namespace Bresenhams
 
 			while (num_of_pixel--)
 			{
-				if (determinant >= 0)
+				if (determinant * x_step * y_step >= 0)
 				{
 					y += y_step;
 					determinant += determinant_y_step;
@@ -68,13 +68,13 @@ namespace Bresenhams
 			num_of_pixel = abs(dy);
 			determinant = (2 * (-dx * y_step)) + (dy * x_step);
 
-			const int determinant_x_step = 2 * (-dx * y_step);
-			const int determinant_y_step = 2 * ((-dx * y_step) + (dy * x_step));
+			const int determinant_x_step = 2 * ((-dx * y_step) + (dy * x_step));
+			const int determinant_y_step = 2 * (-dx * y_step);
 
 
 			while (num_of_pixel--)
 			{
-				if (determinant <= 0)
+				if (determinant * x_step * y_step >= 0)
 				{
 					x += x_step;
 					determinant += determinant_y_step;
