@@ -432,16 +432,40 @@ bool TGA_Image::SaveToTGAFile(std::string _filename, bool is_compress)
 
 Color TGA_Image::GetPixel(unsigned int _x_coord, unsigned int _y_coord)
 {
-	if (_x_coord < 0 || _x_coord >= width_)
-		std::cerr << "X coord is out of boundary\n";
-	if (_y_coord < 0 || _y_coord >= height_)
-		std::cerr << "Y coord is out of boundary\n";
-
+	IsInsideBoundary(_x_coord, _y_coord);
 
 	return data_[((width_ * _y_coord)-1) + _x_coord];
 }
 
 void TGA_Image::SetPixel(unsigned int _x_coord, unsigned int _y_coord, Color _color)
 {
+	IsInsideBoundary(_x_coord, _y_coord);
+
 	data_[(width_ * _y_coord) + _x_coord] = _color;
+}
+
+short TGA_Image::GetWidth()
+{
+	return width_;
+}
+short TGA_Image::GetHeight()
+{
+	return height_;
+}
+
+bool TGA_Image::IsInsideBoundary(unsigned int _x_coord, unsigned int _y_coord)
+{
+	if (_x_coord < 0 || _x_coord >= width_)
+	{
+		std::cerr << "X coord is out of boundary\n";
+		return false;
+	}
+		
+	if (_y_coord < 0 || _y_coord >= height_)
+	{
+		std::cerr << "Y coord is out of boundary\n";
+		return false;
+	}
+
+	return true;
 }

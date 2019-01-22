@@ -5,10 +5,11 @@
 
 // TGA format details:
 // http://tfc.duke.free.fr/coding/tga_specs.pdf
-
+#pragma once
 
 #include <vector>
 #include "Color.h"
+#include "../Math/Vector.h"
 
 class TGA_Image
 {
@@ -76,6 +77,15 @@ public:
 	bool SaveToTGAFile(std::string _filename, bool is_compress);
 	Color GetPixel(unsigned int _x_coord, unsigned int _y_coord);
 	void SetPixel(unsigned int _x_coord, unsigned int _y_coord, Color _color);
+	short GetWidth();
+	short GetHeight();
+
+	bool IsInsideBoundary(unsigned int _x_coord, unsigned int _y_coord);
+	template<typename T>
+	bool IsInsideBoundary(Vector2D<T> _input)
+	{
+		return IsInsideBoundary(static_cast<unsigned int>(_input.x), static_cast<unsigned int>(_input.y));
+	}
 
 	enum TGA_Format
 	{
