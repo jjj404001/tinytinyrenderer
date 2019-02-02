@@ -31,61 +31,52 @@ namespace Bresenhams
 
 		int num_of_pixel = abs(dx);
 
-		const int x_step = (dx > 0) ? 1 : -1;
-		const int y_step = (dy > 0) ? 1 : -1;
-		
-		int determinant = 2 * (dy * x_step) + (-dx * y_step);
+		const int x_step_sign = (dx > 0) ? 1 : -1;
+		const int y_step_sign = (dy > 0) ? 1 : -1;
 
+		const int x_step = 2 * dy;
+		const int y_step = 2 * -dx;
+		
+		int determinant = 2 * (dy) + (-dx);
+
+		// Plot initial pixel on starting point.
 		_target.SetPixel(x, y, _color);
 
+		auto even_octant = [](int const& _determinant) { return _determinant >= 0; };
+		auto odd_octant  = [](int const& _determinant) { return _determinant <= 0; };
 
-		
+		bool(*determining_function)(int const&) = even_octant;
 
-		if (abs(dx) > abs(dy))
-		{
-			// x and y steps are sign of dx and dy.
-			const int determinant_x_step = 2 * (dy * x_step);
-			const int determinant_y_step = 2 * ((dy * x_step) + (-dx * y_step));
+		// TODO : Using references maybe more readable.
+		int* major_axis = &x;
+		int* minor_axis = &y;
 
+		int major_step = x_step;
+		int minor_step = y_step;
 
-			while (num_of_pixel--)
-			{
-				if (determinant * x_step * y_step >= 0)
-				{
-					y += y_step;
-					determinant += determinant_y_step;
-				}
-				else
-					determinant += determinant_x_step;
-
-
-				x += x_step;
-				_target.SetPixel(x, y, _color);
-			}
-		}
-		else
+		// TODO : Maybe this if statement can be replaced with ? : notation.
+		if (abs(dy) > abs(dx))
 		{
 			num_of_pixel = abs(dy);
-			determinant = (2 * (-dx * y_step)) + (dy * x_step);
+			determinant = dy + (2 * -dx); // TODO : Change determinant for all cases.
+			determining_function = odd_octant;
 
-			const int determinant_x_step = 2 * ((-dx * y_step) + (dy * x_step));
-			const int determinant_y_step = 2 * (-dx * y_step);
+			major_axis = &y;
+			minor_axis = &x;
+			std::swap(major_step, minor_step);
+		}
 
-
-			while (num_of_pixel--)
+		while (--num_of_pixel)
+		{
+			if (determining_function(determinant))
 			{
-				if (determinant * x_step * y_step >= 0)
-				{
-					x += x_step;
-					determinant += determinant_y_step;
-				}
-				else
-					determinant += determinant_x_step;
-
-
-				y += y_step;
-				_target.SetPixel(x, y, _color);
+				determinant += minor_step;
+				(*minor_axis)++; // TODO : Change ++ to minor_sign using x and y step_signs
 			}
+
+			determinant += major_step;
+			(*major_axis)++; // TODO : Change ++ to minor_sign using x and y step_signs
+			_target.SetPixel(x, y, _color);
 		}
 	}
 }

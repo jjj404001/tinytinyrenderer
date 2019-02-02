@@ -145,16 +145,16 @@ bool TGA_Image::CompressRLE(std::ofstream & _output_file)
 		auto chunck_end = std::end(data_);
 		chunck_end = std::adjacent_find(chunck_begin, chunck_end, [](Color _i, Color _j) { return _i == _j; });
 
-		auto chunk_size = (chunck_end - chunck_begin);
+		int chunk_size = static_cast<int>(chunck_end - chunck_begin);
 		if (!chunk_size)
 		{
 			chunck_end = std::end(data_);
 			chunck_end = std::adjacent_find(chunck_begin, chunck_end, [](Color _i, Color _j) { return _i != _j; });
-			chunk_size = (chunck_end - chunck_begin);
+			chunk_size = static_cast<int>(chunck_end - chunck_begin);
 			if (chunk_size > 128)
 			{
 				chunck_end = chunck_begin + 128; // Max length of chunk is 128.;
-				chunk_size = (chunck_end - chunck_begin);
+				chunk_size = static_cast<int>(chunck_end - chunck_begin);
 			}
 
 			nPixels -= chunk_size;
@@ -455,13 +455,13 @@ short TGA_Image::GetHeight()
 
 bool TGA_Image::IsInsideBoundary(unsigned int _x_coord, unsigned int _y_coord)
 {
-	if (_x_coord < 0 || _x_coord >= width_)
+	if (_x_coord >= static_cast<unsigned int>(width_))
 	{
 		std::cerr << "X coord is out of boundary\n";
 		return false;
 	}
 		
-	if (_y_coord < 0 || _y_coord >= height_)
+	if (_y_coord >= static_cast<unsigned int>(height_))
 	{
 		std::cerr << "Y coord is out of boundary\n";
 		return false;
