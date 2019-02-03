@@ -34,10 +34,10 @@ namespace Bresenhams
 		const int x_step_sign = (dx > 0) ? 1 : -1;
 		const int y_step_sign = (dy > 0) ? 1 : -1;
 
-		const int x_step = 2 * dy;
-		const int y_step = 2 * -dx;
+		const int x_step = (2 * (dy * x_step_sign));
+		const int y_step = (2 * (-dx * y_step_sign));
 		
-		int determinant = 2 * (dy) + (-dx);
+		int determinant = 2 * (dy * x_step_sign) + (-dx * y_step_sign);
 
 		// Plot initial pixel on starting point.
 		_target.SetPixel(x, y, _color);
@@ -54,28 +54,44 @@ namespace Bresenhams
 		int major_step = x_step;
 		int minor_step = y_step;
 
+		int major_sign = x_step_sign;
+		int minor_sign = y_step_sign;
+
 		// TODO : Maybe this if statement can be replaced with ? : notation.
 		if (abs(dy) > abs(dx))
 		{
 			num_of_pixel = abs(dy);
-			determinant = dy + (2 * -dx); // TODO : Change determinant for all cases.
-			determining_function = odd_octant;
+			
+			if (dx > 0)
+				determining_function = odd_octant;
+			else
+				determining_function = even_octant;
 
 			major_axis = &y;
 			minor_axis = &x;
+
 			std::swap(major_step, minor_step);
+
+			major_sign = y_step_sign;
+			minor_sign = x_step_sign;
+
+			determinant = (minor_step / 2) + major_step; // TODO : Change determinant for all cases.
 		}
+		else if (dx > 0)
+			determining_function = even_octant;
+		else
+			determining_function = odd_octant;
 
 		while (--num_of_pixel)
 		{
 			if (determining_function(determinant))
 			{
 				determinant += minor_step;
-				(*minor_axis)++; // TODO : Change ++ to minor_sign using x and y step_signs
+				(*minor_axis) += minor_sign; // TODO : Change ++ to minor_sign using x and y step_signs
 			}
 
 			determinant += major_step;
-			(*major_axis)++; // TODO : Change ++ to minor_sign using x and y step_signs
+			(*major_axis) += major_sign; // TODO : Change ++ to minor_sign using x and y step_signs
 			_target.SetPixel(x, y, _color);
 		}
 	}
