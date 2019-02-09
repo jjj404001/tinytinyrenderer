@@ -63,9 +63,20 @@ namespace Bresenhams
 			num_of_pixel = abs(dy);
 			
 			if (dx > 0)
-				determining_function = odd_octant;
+			{
+				if(dy > 0)
+					determining_function = odd_octant;
+				else
+					determining_function = even_octant;
+			}
 			else
-				determining_function = even_octant;
+			{
+				if (dy > 0)
+					determining_function = even_octant;
+				else
+					determining_function = odd_octant;
+			}
+				
 
 			major_axis = &y;
 			minor_axis = &x;
@@ -77,10 +88,24 @@ namespace Bresenhams
 
 			determinant = (minor_step / 2) + major_step; // TODO : Change determinant for all cases.
 		}
-		else if (dx > 0)
-			determining_function = even_octant;
-		else
-			determining_function = odd_octant;
+		else 
+		{
+			if (dx > 0)
+			{
+				if (dy > 0)
+					determining_function = even_octant;
+				else
+					determining_function = odd_octant;
+			}
+			else
+			{
+				if (dy > 0)
+					determining_function = odd_octant;
+				else
+					determining_function = even_octant;
+			}
+		}
+			
 
 		while (--num_of_pixel)
 		{
