@@ -86,7 +86,7 @@ namespace Bresenhams
 			major_sign = y_step_sign;
 			minor_sign = x_step_sign;
 
-			determinant = (minor_step / 2) + major_step; // TODO : Change determinant for all cases.
+			determinant = (minor_step / 2) + major_step;
 		}
 		else 
 		{
