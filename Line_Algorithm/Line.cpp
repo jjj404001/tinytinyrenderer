@@ -2,31 +2,23 @@
 #include <cassert>
 namespace Bresenhams
 {
-	void Line(TGA_Image& _target, const Vec2f& _start, const Vec2f& _end, const Color& _color)
+	void LineRasterize(TGA_Image& _target, const Vec2f& _start, const Vec2f& _end, const Color& _color)
 	{
 		if (!_target.IsInsideBoundary(_start))
-		{
 			assert(!"Starting value is out of boundary.");
-			return;
-		}
 			
 		if (!_target.IsInsideBoundary(_end))
-		{
 			assert(!"Ending value is out of boundary.");
-			return;
-		}
 			
-
+		// Rate of changes.
 		const int dy = static_cast<int>(_end.y - _start.y);
 		const int dx = static_cast<int>(_end.x - _start.x);
 
-
+		// Pixel position x, y.
 		int x = static_cast<int>(_start.x);
 		int y = static_cast<int>(_start.y);
 
 		const float slope = static_cast<float>(dy) / dx;
-		const int y_intersect = y - static_cast<int>(slope * x);
-
 		
 
 		int num_of_pixel = abs(dx);
@@ -45,9 +37,10 @@ namespace Bresenhams
 		auto even_octant = [](int const& _determinant) { return _determinant >= 0; };
 		auto odd_octant  = [](int const& _determinant) { return _determinant <= 0; };
 
+		// Default setting is for octant 0.
 		bool(*determining_function)(int const&) = even_octant;
 
-		// TODO : Using references maybe more readable.
+
 		int* major_axis = &x;
 		int* minor_axis = &y;
 
@@ -57,7 +50,7 @@ namespace Bresenhams
 		int major_sign = x_step_sign;
 		int minor_sign = y_step_sign;
 
-		// TODO : Maybe this if statement can be replaced with ? : notation.
+
 		if (abs(dy) > abs(dx))
 		{
 			num_of_pixel = abs(dy);
@@ -106,17 +99,17 @@ namespace Bresenhams
 			}
 		}
 			
-
+		// Actual pixel plotting.
 		while (--num_of_pixel)
 		{
 			if (determining_function(determinant))
 			{
 				determinant += minor_step;
-				(*minor_axis) += minor_sign; // TODO : Change ++ to minor_sign using x and y step_signs
+				(*minor_axis) += minor_sign;
 			}
 
 			determinant += major_step;
-			(*major_axis) += major_sign; // TODO : Change ++ to minor_sign using x and y step_signs
+			(*major_axis) += major_sign;
 			_target.SetPixel(x, y, _color);
 		}
 	}

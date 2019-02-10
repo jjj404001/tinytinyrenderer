@@ -5,5 +5,5 @@
 
 namespace Bresenhams
 {
-	void Line(TGA_Image& _target, const Vec2f& _start, const Vec2f& _end, const Color& _color);
+	void LineRasterize(TGA_Image& _target, const Vec2f& _start, const Vec2f& _end, const Color& _color);
 }
