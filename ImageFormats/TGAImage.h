@@ -3,7 +3,7 @@
 // email    : jjj404001@gmail.com
 // brief    : Image file structure for TGA image format.
 
-// TGA format details:
+// TGA format details reference:
 // http://tfc.duke.free.fr/coding/tga_specs.pdf
 #pragma once
 

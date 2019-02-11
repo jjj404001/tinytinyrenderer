@@ -15,14 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Vector.h">
+    <ClInclude Include="OBJGeometry.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vector2D.hpp">
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="OBJGeometry.cpp">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector3D.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    </ClCompile>
   </ItemGroup>
 </Project>
