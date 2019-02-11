@@ -1,9 +1,19 @@
 #pragma once
 #include "../Math/Vector.h"
-#include "../ImageFormats/TGAImage.h"
 
-
-namespace Bresenhams
+class Line
 {
-	void LineRasterize(TGA_Image& _target, const Vec2f& _start, const Vec2f& _end, const Color& _color);
-}
+	Vec2i start_;
+	Vec2i end_;
+	int dx_;
+	int dy_;
+public:
+	Line(Vec2i const& _start, Vec2i const& _end);
+
+	const Vec2i& GetStartPoint() const;
+	const Vec2i& GetEndPoint() const;
+	Vec2i& GetStartPoint();
+	Vec2i& GetEndPoint();
+	const int& GetDx();
+	const int& GetDy();
+};
