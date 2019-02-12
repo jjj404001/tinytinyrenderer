@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 #include "../Math/Vector.h"
+#include "../Line_Algorithm/Line.h"
+#include "../ImageFormats/TGAImage.h"
 class OBJ_Geometry
 {
 	// Reference : http://paulbourke.net/dataformats/obj/
@@ -66,11 +68,15 @@ class OBJ_Geometry
 
 	std::string material_library_name_;
 	// std::string object_name[]; Not sure we need it or not.
-	std::vector<Vec3f> geometric_vertices;
-	std::vector<Vec3f> texture_vertices;
-	std::vector<Vec3f> vertex_normals;
+	std::vector<Vec3f> geometric_vertices_;
+	std::vector<Vec3f> texture_vertices_;
+	std::vector<Vec3f> vertex_normals_;
+	std::vector<Line> wire_frame_;
 
+	float width_ = 100.0f;
+	float height_ = 100.0f;
 public: 
 	OBJ_Geometry(std::string _filename);
 	bool LoadFromOBJFile(std::string _filename);
+	bool DrawWireframe(TGA_Image& _image);
 };

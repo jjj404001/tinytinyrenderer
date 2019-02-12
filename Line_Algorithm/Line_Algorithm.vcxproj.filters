@@ -18,8 +18,14 @@
     <ClInclude Include="Line.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="LineRasterizeAlgorithm.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="LineRasterizeAlgorithm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Line.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
