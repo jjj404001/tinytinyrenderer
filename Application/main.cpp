@@ -24,23 +24,42 @@ int main(int argc, const char* argv)
 	
 	TGA_Image image(100, 100, 3);
 	// 1
-	Bresenhams::LineRasterize(image, Line(Vec2i(49, 49), Vec2i(64, 79)), Color(255, 0, 0, 255));
+	Bresenhams::LineRasterize(image, Vec2i(49, 49), Vec2i(64, 79), Color(255, 0, 0, 255));
+	Bresenhams::LineRasterize(image, Vec2i(64, 79), Vec2i(49, 49), Color(255, 0, 0, 255));
 	Bresenhams::LineRasterize(image, Vec2i(49, 49), Vec2i(79, 64), Color(255, 0, 0, 255));
+	Bresenhams::LineRasterize(image, Vec2i(79, 64), Vec2i(49, 49), Color(255, 0, 0, 255));
 	// 2
 	Bresenhams::LineRasterize(image, Vec2i(49, 49), Vec2i(34, 79), Color(0, 255, 0, 255));
+	Bresenhams::LineRasterize(image, Vec2i(34, 79), Vec2i(49, 49), Color(0, 255, 0, 255));
 	Bresenhams::LineRasterize(image, Vec2i(49, 49), Vec2i(19, 64), Color(0, 255, 0, 255));
+	Bresenhams::LineRasterize(image, Vec2i(19, 64), Vec2i(49, 49), Color(0, 255, 0, 255));
 	// 3
 	Bresenhams::LineRasterize(image, Vec2i(49, 49), Vec2i(19, 34), Color(0, 0, 255, 255));
+	Bresenhams::LineRasterize(image, Vec2i(19, 34), Vec2i(49, 49), Color(0, 0, 255, 255));
 	Bresenhams::LineRasterize(image, Vec2i(49, 49), Vec2i(34, 19), Color(0, 0, 255, 255));
+	Bresenhams::LineRasterize(image, Vec2i(34, 19), Vec2i(49, 49), Color(0, 0, 255, 255));
 	// 4
 	Bresenhams::LineRasterize(image, Vec2i(49, 49), Vec2i(64, 19), Color(255, 255, 0, 255));
+	Bresenhams::LineRasterize(image, Vec2i(64, 19), Vec2i(49, 49), Color(255, 255, 0, 255));
 	Bresenhams::LineRasterize(image, Vec2i(49, 49), Vec2i(79, 34), Color(255, 255, 0, 255));
+	Bresenhams::LineRasterize(image, Vec2i(79, 34), Vec2i(49, 49), Color(255, 255, 0, 255));
 
 	// Right angle test
 	Bresenhams::LineRasterize(image, Vec2i(49, 49), Vec2i(49, 79), Color(0, 255, 255, 255));
+	Bresenhams::LineRasterize(image, Vec2i(49, 79), Vec2i(49, 49), Color(0, 255, 255, 255));
 	Bresenhams::LineRasterize(image, Vec2i(49, 49), Vec2i(79, 49), Color(0, 255, 255, 255));
+	Bresenhams::LineRasterize(image, Vec2i(79, 49), Vec2i(49, 49), Color(0, 255, 255, 255));
 	Bresenhams::LineRasterize(image, Vec2i(49, 49), Vec2i(49, 19), Color(0, 255, 255, 255));
+	Bresenhams::LineRasterize(image, Vec2i(49, 19), Vec2i(49, 49), Color(0, 255, 255, 255));
 	Bresenhams::LineRasterize(image, Vec2i(49, 49), Vec2i(19, 49), Color(0, 255, 255, 255));
+	Bresenhams::LineRasterize(image, Vec2i(19, 49), Vec2i(49, 49), Color(0, 255, 255, 255));
+
+	// Line symmetry test
+	Bresenhams::LineRasterize(image, Vec2i(0, 0), Vec2i(49, 98), Color(255, 0, 255, 255));
+	Bresenhams::LineRasterize(image, Vec2i(49, 98), Vec2i(0, 0), Color(255, 0, 255, 255));
+	Bresenhams::LineRasterize(image, Vec2i(1, 0), Vec2i(50, 98), Color(255, 0, 255, 255));
+	Bresenhams::LineRasterize(image, Vec2i(50, 98), Vec2i(1, 0), Color(255, 0, 255, 255));
+
 
 	image.SaveToTGAFile("b.tga", true);
 	

@@ -19,15 +19,31 @@ namespace Bresenhams
 	void Line::GetComponents(::Line& _line)
 	{
 		// Rate of changes.
-		const int dy = _line.GetDy();
-		const int dx = _line.GetDx();
+		int dy = _line.GetDy();
+		int dx = _line.GetDx();
 
 		// Pixel position x, y.
 		x = start.x;
 		y = start.y;
 
+		if (_line.GetSlope() >= 0 && start.x > end.x) // if starting position is right hand side.
+		{
+			x = end.x;
+			y = end.y;
 
-		num_of_pixel = abs(dx);
+			dx = -dx;
+			dy = -dy;
+		}
+		else if(_line.GetSlope() < 0 && start.x > end.x)
+		{
+			x = end.x;
+			y = end.y;
+
+			dx = -dx;
+			dy = -dy;
+		}
+
+		num_of_pixel = abs(dx) +1; // +1 for starting pixel itself.
 
 		const int x_step_sign = (dx > 0) ? 1 : -1;
 		const int y_step_sign = (dy > 0) ? 1 : -1;
@@ -59,7 +75,7 @@ namespace Bresenhams
 
 		if (abs(dy) > abs(dx))
 		{
-			num_of_pixel = abs(dy);
+			num_of_pixel = abs(dy) +1; // +1 for starting pixel itself.
 
 			if (dx > 0)
 			{
