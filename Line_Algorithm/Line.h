@@ -16,4 +16,5 @@ public:
 	Vec2i& GetEndPoint();
 	const int& GetDx();
 	const int& GetDy();
+	float GetSlope();
 };

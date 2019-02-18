@@ -35,3 +35,8 @@ const int & Line::GetDy()
 {
 	return dy_;
 }
+
+float Line::GetSlope()
+{
+	return static_cast<float>(dy_)/ static_cast<float>(dx_);
+}
