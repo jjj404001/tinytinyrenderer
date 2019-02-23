@@ -103,6 +103,7 @@ bool OBJ_Geometry::LoadFromOBJFile(std::string _filename)
 				// First line.
 				buffer_stream >> stream_segment;
 				Vec3f startVec3 = geometric_vertices_[std::stoi(stream_segment) - 1];
+				const Vec3f veryFirstVec3 = startVec3;
 
 				buffer_stream >> stream_segment;
 				Vec3f endVec3 = geometric_vertices_[std::stoi(stream_segment) - 1];
@@ -119,7 +120,7 @@ bool OBJ_Geometry::LoadFromOBJFile(std::string _filename)
 				}
 
 
-				wire_frame_.push_back(Line(Vec2i(endVec3.x + half_width, endVec3.y + half_height), wire_frame_[0].GetStartPoint()));
+				wire_frame_.push_back(Line(Vec2i(endVec3.x + half_width, endVec3.y + half_height), Vec2i(veryFirstVec3.x + half_width, veryFirstVec3.y + half_height)));
 
 				continue;
 			}
@@ -134,8 +135,13 @@ bool OBJ_Geometry::LoadFromOBJFile(std::string _filename)
 
 bool OBJ_Geometry::DrawWireframe(TGA_Image & _image)
 {
-	for(auto line : wire_frame_)
+	int i = 0;
+	for (auto line : wire_frame_)
+	{
 		Bresenhams::LineRasterize(_image, line, Color(255, 0, 0, 255));
+		_image.SaveToTGAFile(std::to_string(i++) + ".tga", true);
+	}
+		
 
 	return true;
 }
