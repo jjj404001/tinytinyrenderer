@@ -108,7 +108,8 @@ bool OBJ_Geometry::LoadFromOBJFile(std::string _filename)
 				buffer_stream >> stream_segment;
 				Vec3f endVec3 = geometric_vertices_[std::stoi(stream_segment) - 1];
 
-				wire_frame_.push_back(Line(Vec2i(startVec3.x + half_width, startVec3.y + half_height), Vec2i(endVec3.x + half_width, endVec3.y + half_height)));
+				wire_frame_.push_back(Line(Vec2i(static_cast<int>(startVec3.x + half_width), static_cast<int>(startVec3.y + half_height)), 
+										   Vec2i(static_cast<int>(endVec3.x + half_width), static_cast<int>(endVec3.y + half_height))));
 
 				while (buffer_stream >> stream_segment)
 				{
@@ -116,11 +117,13 @@ bool OBJ_Geometry::LoadFromOBJFile(std::string _filename)
 
 					endVec3 = geometric_vertices_[std::stoi(stream_segment) - 1];
 
-					wire_frame_.push_back(Line(Vec2i(startVec3.x + half_width, startVec3.y + half_height), Vec2i(endVec3.x + half_width, endVec3.y + half_height)));
+					wire_frame_.push_back(Line(Vec2i(static_cast<int>(startVec3.x + half_width), static_cast<int>(startVec3.y + half_height)),
+											   Vec2i(static_cast<int>(endVec3.x + half_width), static_cast<int>(endVec3.y + half_height))));
 				}
 
 
-				wire_frame_.push_back(Line(Vec2i(endVec3.x + half_width, endVec3.y + half_height), Vec2i(veryFirstVec3.x + half_width, veryFirstVec3.y + half_height)));
+				wire_frame_.push_back(Line(Vec2i(static_cast<int>(endVec3.x + half_width), static_cast<int>(endVec3.y + half_height)), 
+										   Vec2i(static_cast<int>(veryFirstVec3.x + half_width), static_cast<int>(veryFirstVec3.y + half_height))));
 
 				continue;
 			}
