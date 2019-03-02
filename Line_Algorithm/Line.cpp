@@ -26,12 +26,12 @@ Vec2i& Line::GetEndPoint()
 	return end_;
 }
 
-const int & Line::GetDx()
+int Line::GetDx() const
 {
 	return dx_;
 }
 
-const int & Line::GetDy()
+int Line::GetDy() const
 {
 	return dy_;
 }
