@@ -53,8 +53,7 @@ class TGA_Image
         ImageSpec image_spec_;
     };
 
-	void FlipVertically();
-	void FlipHorizontally();
+	
 
 	//https://en.wikipedia.org/wiki/Run-length_encoding
 	bool UncompressRLE(std::ifstream& _input_file);
@@ -79,6 +78,8 @@ public:
 	void SetPixel(unsigned int _x_coord, unsigned int _y_coord, Color _color);
 	short GetWidth();
 	short GetHeight();
+	void FlipVertically();
+	void FlipHorizontally();
 
 	bool IsInsideBoundary(unsigned int _x_coord, unsigned int _y_coord);
 	template<typename T>

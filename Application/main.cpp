@@ -6,23 +6,17 @@
 #include <string>
 int main(int argc, const char* argv)
 {
-	//OBJ_Geometry  obj("Cube.obj");
-	
-	TGA_Image image(100, 100, 3);
+	TGA_Image image(3000, 2000, 3);
 
-	//obj.DrawWireframe(image);
-	Triangle tri0(Vec2i(0, 0), Vec2i(40, 40), Vec2i(10, 70));
-	Triangle tri1(Vec2i(99, 99), Vec2i(40, 40), Vec2i(10, 70));
-	Triangle tri2(Vec2i(0, 99), Vec2i(0, 0), Vec2i(10, 70));
-	Color red(255, 0, 0, 255);
-	Color green(0, 255, 0, 255);
-	Color blue(0, 0, 255, 255);
-
-	Triangle::TriangleRasterize(image, tri0, red);
-	Triangle::TriangleRasterize(image, tri1, green);
-	Triangle::TriangleRasterize(image, tri2, blue);
+	OBJ_Geometry obj;
+	obj.SetZoom(1000.0f);
+	obj.SetWidthHeight(image.GetWidth(), image.GetHeight());
+	obj.LoadFromOBJFile("suzanne.obj");
+	obj.DrawWireframe(image);
 	
-	image.SaveToTGAFile("a.tga", true);
+
+	image.FlipVertically();
+	image.SaveToTGAFile("suzanne.tga", true);
 	
 	//getchar();
 	return 0;

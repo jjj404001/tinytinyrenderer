@@ -5,9 +5,34 @@
 #include "OBJGeometry.h"
 #include "../Line_Algorithm/LineRasterizeAlgorithm.h"
 
+void OBJ_Geometry::SetWidth(float _new_width)
+{
+	width_ = _new_width;
+}
+
+void OBJ_Geometry::SetHeight(float _new_height)
+{
+	height_ = _new_height;
+}
+
+void OBJ_Geometry::SetWidthHeight(float _new_width, float _new_height)
+{
+	SetWidth(_new_width);
+	SetHeight(_new_height);
+}
+
+void OBJ_Geometry::SetZoom(float _new_zoom)
+{
+	zoom_ = _new_zoom;
+}
+
 OBJ_Geometry::OBJ_Geometry(std::string _filename)
 {
 	LoadFromOBJFile(_filename);
+}
+
+OBJ_Geometry::OBJ_Geometry()
+{
 }
 
 bool OBJ_Geometry::LoadFromOBJFile(std::string _filename)
@@ -58,7 +83,7 @@ bool OBJ_Geometry::LoadFromOBJFile(std::string _filename)
 				buffer_stream >> stream_segment;
 				vertex.z = std::stof(stream_segment);
 
-				geometric_vertices_.push_back(vertex);
+				geometric_vertices_.push_back(vertex * zoom_);
 				
 				continue;
 			}
@@ -139,10 +164,11 @@ bool OBJ_Geometry::LoadFromOBJFile(std::string _filename)
 bool OBJ_Geometry::DrawWireframe(TGA_Image & _image)
 {
 	int i = 0;
+	const auto maximum = wire_frame_.size();
 	for (auto line : wire_frame_)
 	{
 		Bresenhams::LineRasterize(_image, line, Color(255, 0, 0, 255));
-		_image.SaveToTGAFile(std::to_string(i++) + ".tga", true);
+		std::cout << i++ << " of " << maximum << " lines." << std::endl;
 	}
 		
 

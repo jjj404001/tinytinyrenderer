@@ -17,3 +17,10 @@
 /x64/Debug
 /GeometryFormats/x64/Debug
 /Triangle_Algorithm/x64/Debug
+/Application/x64/Release
+/GeometryFormats/x64/Release
+/ImageFormats/x64/Release
+/Line_Algorithm/x64/Release
+/Math/x64/Release
+/Triangle_Algorithm/x64/Release
+/x64/Release

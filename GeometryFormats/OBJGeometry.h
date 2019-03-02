@@ -75,8 +75,16 @@ class OBJ_Geometry
 
 	float width_ = 100.0f;
 	float height_ = 100.0f;
+	float zoom_ = 1.0f;
 public: 
 	OBJ_Geometry(std::string _filename);
+	OBJ_Geometry();
+
+	void SetWidth(float _new_width);
+	void SetHeight(float _new_height);
+	void SetWidthHeight(float _new_width, float _new_height);
+	void SetZoom(float _new_zoom);
+	
 	bool LoadFromOBJFile(std::string _filename);
 	bool DrawWireframe(TGA_Image& _image);
 };

@@ -131,7 +131,7 @@ bool TGA_Image::UncompressRLE(std::ifstream& _input_file)
 bool TGA_Image::CompressRLE(std::ofstream & _output_file)
 {
 	auto nPixels = width_ * height_;
-
+	float maximum = static_cast<float>(nPixels);
 
 	auto chunck_begin = std::begin(data_);
 	auto color_size = sizeof(Color); // default = 32bits
@@ -190,6 +190,7 @@ bool TGA_Image::CompressRLE(std::ofstream & _output_file)
 
 
 		chunck_begin = chunck_begin + chunk_size;
+		std::cout << (static_cast<float>(nPixels) / maximum) * 100.f << "% remaining." << std::endl;
 	}
 	
 
@@ -386,12 +387,16 @@ bool TGA_Image::SaveToTGAFile(std::string _filename, bool is_compress)
 		if (header.image_spec_.bits_per_pixel_ == 24)
 			color_size -= 1;
 
-
+		unsigned int count = 0;
+		unsigned int maximum = static_cast<unsigned int>(data_.size());
 		for (auto& itr : data_)
 		{
 			// TGA pixel color is in form of : BGRA.
 			// So swap RGBA to BGRA
 			std::swap(itr.red, itr.blue);
+
+			std::cout << "Saving " << count++ << " of " << maximum << "datas." << std::endl;
+
 			output_file.write(reinterpret_cast<char*>(&itr), color_size);
 			if (!output_file.good())
 			{
