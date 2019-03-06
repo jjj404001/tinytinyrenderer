@@ -93,4 +93,5 @@ public:
 	bool DrawWireframeWithTriangle(TGA_Image& _image, Color _color);
 	bool DrawWithRandomColor(TGA_Image& _image);
 	bool DrawWithFlatColor(TGA_Image& _image, Color _color);
+	bool DrawWithFlatLight(TGA_Image& _image);
 };

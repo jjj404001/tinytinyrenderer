@@ -159,7 +159,7 @@ bool OBJ_Geometry::LoadFromOBJFile(std::string _filename)
 					Vec3f third((third_vertex.x + half_width), (third_vertex.y + half_height), third_vertex.z);
 
 					Triangle tri(first, second, third);
-					tri.SetNormal(Vec3f::CrossProduct((second - first), (third - first)));
+					tri.SetNormal(Vec3f::CrossProduct((second -= first), (third -= first)));
 					faces_.push_back(tri);
 				}
 					
@@ -249,6 +249,31 @@ bool OBJ_Geometry::DrawWithFlatColor(TGA_Image & _image, Color _color)
 
 		
 		Triangle::TriangleRasterize(_image, triangle, _color);
+		std::cout << i++ << " of " << maximum << " triangles." << std::endl;
+	}
+
+	return true;
+}
+
+bool OBJ_Geometry::DrawWithFlatLight(TGA_Image & _image)
+{
+	int i = 0;
+	const auto maximum = faces_.size();
+	auto view = Vec3f(0.0f, 0.0f, -1.0f);
+
+	for (auto& triangle : faces_)
+	{
+		Vec3f normal = triangle.GetNormal();
+		normal.Normalize();
+		if (Vec3f::DotProduct(normal, view) < 0.0f)
+			continue;
+
+		float light_amount = Vec3f::DotProduct(normal, view);
+		int light_color = static_cast<int>(255 * light_amount);
+
+		Color color(light_color, light_color, light_color);
+
+		Triangle::TriangleRasterize(_image, triangle, color);
 		std::cout << i++ << " of " << maximum << " triangles." << std::endl;
 	}
 
